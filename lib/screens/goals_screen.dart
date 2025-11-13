@@ -284,17 +284,19 @@ class GoalsScreen extends StatelessWidget {
     final targetAmountController = TextEditingController();
     final currentAmountController = TextEditingController();
     DateTime selectedDate = DateTime.now().add(const Duration(days: 30));
+    
+    final theme = context.theme;
 
     showDialog(
       context: context,
-      builder: (context) => StatefulBuilder(
+      builder: (dialogContext) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          backgroundColor: context.theme.colors.background,
+          backgroundColor: theme.colors.background,
           title: Text(
             'Buat Target Baru',
-            style: context.theme.typography.lg.copyWith(
+            style: theme.typography.lg.copyWith(
               fontWeight: FontWeight.w600,
-              color: context.theme.colors.foreground,
+              color: theme.colors.foreground,
             ),
           ),
           content: SingleChildScrollView(
@@ -305,56 +307,56 @@ class GoalsScreen extends StatelessWidget {
                   controller: nameController,
                   decoration: InputDecoration(
                     labelText: 'Nama Target',
-                    labelStyle: TextStyle(color: context.theme.colors.mutedForeground),
+                    labelStyle: TextStyle(color: theme.colors.mutedForeground),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: context.theme.colors.border),
+                      borderSide: BorderSide(color: theme.colors.border),
                     ),
                   ),
-                  style: TextStyle(color: context.theme.colors.foreground),
+                  style: TextStyle(color: theme.colors.foreground),
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: targetAmountController,
                   decoration: InputDecoration(
                     labelText: 'Jumlah Target',
-                    labelStyle: TextStyle(color: context.theme.colors.mutedForeground),
+                    labelStyle: TextStyle(color: theme.colors.mutedForeground),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: context.theme.colors.border),
+                      borderSide: BorderSide(color: theme.colors.border),
                     ),
                     prefixText: 'Rp ',
                   ),
                   keyboardType: TextInputType.number,
-                  style: TextStyle(color: context.theme.colors.foreground),
+                  style: TextStyle(color: theme.colors.foreground),
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: currentAmountController,
                   decoration: InputDecoration(
                     labelText: 'Jumlah Awal (opsional)',
-                    labelStyle: TextStyle(color: context.theme.colors.mutedForeground),
+                    labelStyle: TextStyle(color: theme.colors.mutedForeground),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: context.theme.colors.border),
+                      borderSide: BorderSide(color: theme.colors.border),
                     ),
                     prefixText: 'Rp ',
                   ),
                   keyboardType: TextInputType.number,
-                  style: TextStyle(color: context.theme.colors.foreground),
+                  style: TextStyle(color: theme.colors.foreground),
                 ),
                 const SizedBox(height: 16),
                 ListTile(
                   title: Text(
                     'Tenggat Waktu',
-                    style: context.theme.typography.sm.copyWith(
-                      color: context.theme.colors.mutedForeground,
+                    style: theme.typography.sm.copyWith(
+                      color: theme.colors.mutedForeground,
                     ),
                   ),
                   subtitle: Text(
                     DateFormat('dd MMMM yyyy', 'id_ID').format(selectedDate),
-                    style: context.theme.typography.base.copyWith(
-                      color: context.theme.colors.foreground,
+                    style: theme.typography.base.copyWith(
+                      color: theme.colors.foreground,
                     ),
                   ),
-                  trailing: Icon(Icons.calendar_today, color: context.theme.colors.foreground),
+                  trailing: Icon(Icons.calendar_today, color: theme.colors.foreground),
                   onTap: () async {
                     final date = await showDatePicker(
                       context: context,
@@ -375,7 +377,7 @@ class GoalsScreen extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
               child: Text(
                 'Batal',
-                style: TextStyle(color: context.theme.colors.mutedForeground),
+                style: TextStyle(color: theme.colors.mutedForeground),
               ),
             ),
             ElevatedButton(
@@ -413,16 +415,17 @@ class GoalsScreen extends StatelessWidget {
   void _showGoalDetails(BuildContext context, Goal goal) {
     final amountController = TextEditingController();
     final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    final theme = context.theme;
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: context.theme.colors.background,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: theme.colors.background,
         title: Text(
           goal.name,
-          style: context.theme.typography.lg.copyWith(
+          style: theme.typography.lg.copyWith(
             fontWeight: FontWeight.w600,
-            color: context.theme.colors.foreground,
+            color: theme.colors.foreground,
           ),
         ),
         content: Column(
@@ -441,14 +444,14 @@ class GoalsScreen extends StatelessWidget {
                 controller: amountController,
                 decoration: InputDecoration(
                   labelText: 'Tambah Jumlah',
-                  labelStyle: TextStyle(color: context.theme.colors.mutedForeground),
+                  labelStyle: TextStyle(color: theme.colors.mutedForeground),
                   border: OutlineInputBorder(
-                    borderSide: BorderSide(color: context.theme.colors.border),
+                    borderSide: BorderSide(color: theme.colors.border),
                   ),
                   prefixText: 'Rp ',
                 ),
                 keyboardType: TextInputType.number,
-                style: TextStyle(color: context.theme.colors.foreground),
+                style: TextStyle(color: theme.colors.foreground),
               ),
             ],
           ],
@@ -464,8 +467,8 @@ class GoalsScreen extends StatelessWidget {
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: context.theme.colors.primary,
-                foregroundColor: context.theme.colors.primaryForeground,
+                backgroundColor: theme.colors.primary,
+                foregroundColor: theme.colors.primaryForeground,
               ),
               child: const Text('Tambah'),
             ),
@@ -476,7 +479,7 @@ class GoalsScreen extends StatelessWidget {
             },
             child: Text(
               'Hapus',
-              style: TextStyle(color: context.theme.colors.error),
+              style: TextStyle(color: theme.colors.error),
             ),
           ),
           TextButton(

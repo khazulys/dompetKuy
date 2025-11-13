@@ -208,17 +208,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     TransactionType type = TransactionType.expense;
     TransactionCategory category = TransactionCategory.other;
     DateTime selectedDate = DateTime.now();
+    
+    final theme = context.theme;
 
     showDialog(
       context: context,
-      builder: (context) => StatefulBuilder(
+      builder: (dialogContext) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          backgroundColor: context.theme.colors.background,
+          backgroundColor: theme.colors.background,
           title: Text(
             'Tambah Transaksi',
-            style: context.theme.typography.lg.copyWith(
+            style: theme.typography.lg.copyWith(
               fontWeight: FontWeight.w600,
-              color: context.theme.colors.foreground,
+              color: theme.colors.foreground,
             ),
           ),
           content: SingleChildScrollView(
@@ -229,39 +231,39 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   controller: titleController,
                   decoration: InputDecoration(
                     labelText: 'Judul',
-                    labelStyle: TextStyle(color: context.theme.colors.mutedForeground),
+                    labelStyle: TextStyle(color: theme.colors.mutedForeground),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: context.theme.colors.border),
+                      borderSide: BorderSide(color: theme.colors.border),
                     ),
                   ),
-                  style: TextStyle(color: context.theme.colors.foreground),
+                  style: TextStyle(color: theme.colors.foreground),
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: amountController,
                   decoration: InputDecoration(
                     labelText: 'Jumlah',
-                    labelStyle: TextStyle(color: context.theme.colors.mutedForeground),
+                    labelStyle: TextStyle(color: theme.colors.mutedForeground),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: context.theme.colors.border),
+                      borderSide: BorderSide(color: theme.colors.border),
                     ),
                     prefixText: 'Rp ',
                   ),
                   keyboardType: TextInputType.number,
-                  style: TextStyle(color: context.theme.colors.foreground),
+                  style: TextStyle(color: theme.colors.foreground),
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<TransactionType>(
                   initialValue: type,
                   decoration: InputDecoration(
                     labelText: 'Tipe',
-                    labelStyle: TextStyle(color: context.theme.colors.mutedForeground),
+                    labelStyle: TextStyle(color: theme.colors.mutedForeground),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: context.theme.colors.border),
+                      borderSide: BorderSide(color: theme.colors.border),
                     ),
                   ),
-                  style: TextStyle(color: context.theme.colors.foreground),
-                  dropdownColor: context.theme.colors.background,
+                  style: TextStyle(color: theme.colors.foreground),
+                  dropdownColor: theme.colors.background,
                   items: [
                     DropdownMenuItem(
                       value: TransactionType.income,
@@ -279,13 +281,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   initialValue: category,
                   decoration: InputDecoration(
                     labelText: 'Kategori',
-                    labelStyle: TextStyle(color: context.theme.colors.mutedForeground),
+                    labelStyle: TextStyle(color: theme.colors.mutedForeground),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: context.theme.colors.border),
+                      borderSide: BorderSide(color: theme.colors.border),
                     ),
                   ),
-                  style: TextStyle(color: context.theme.colors.foreground),
-                  dropdownColor: context.theme.colors.background,
+                  style: TextStyle(color: theme.colors.foreground),
+                  dropdownColor: theme.colors.background,
                   items: TransactionCategory.values.map((cat) {
                     return DropdownMenuItem(
                       value: cat,
@@ -299,12 +301,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   controller: noteController,
                   decoration: InputDecoration(
                     labelText: 'Catatan (opsional)',
-                    labelStyle: TextStyle(color: context.theme.colors.mutedForeground),
+                    labelStyle: TextStyle(color: theme.colors.mutedForeground),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: context.theme.colors.border),
+                      borderSide: BorderSide(color: theme.colors.border),
                     ),
                   ),
-                  style: TextStyle(color: context.theme.colors.foreground),
+                  style: TextStyle(color: theme.colors.foreground),
                   maxLines: 3,
                 ),
               ],
@@ -315,7 +317,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               onPressed: () => Navigator.pop(context),
               child: Text(
                 'Batal',
-                style: TextStyle(color: context.theme.colors.mutedForeground),
+                style: TextStyle(color: theme.colors.mutedForeground),
               ),
             ),
             ElevatedButton(
@@ -351,16 +353,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   void _showTransactionDetails(BuildContext context, Transaction transaction) {
     final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    final theme = context.theme;
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: context.theme.colors.background,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: theme.colors.background,
         title: Text(
           transaction.title,
-          style: context.theme.typography.lg.copyWith(
+          style: theme.typography.lg.copyWith(
             fontWeight: FontWeight.w600,
-            color: context.theme.colors.foreground,
+            color: theme.colors.foreground,
           ),
         ),
         content: Column(
@@ -382,14 +385,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             },
             child: Text(
               'Hapus',
-              style: TextStyle(color: context.theme.colors.error),
+              style: TextStyle(color: theme.colors.error),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Tutup',
-              style: TextStyle(color: context.theme.colors.mutedForeground),
+              style: TextStyle(color: theme.colors.mutedForeground),
             ),
           ),
         ],
