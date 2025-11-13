@@ -12,7 +12,11 @@ class GoalsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final goalProvider = context.watch<GoalProvider>();
-    final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    final currencyFormat = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
 
     return Scaffold(
       backgroundColor: context.theme.colors.background,
@@ -50,7 +54,9 @@ class GoalsScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  currencyFormat.format(goalProvider.totalTargetAmount),
+                                  currencyFormat.format(
+                                    goalProvider.totalTargetAmount,
+                                  ),
                                   style: context.theme.typography.xl.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: context.theme.colors.foreground,
@@ -71,7 +77,9 @@ class GoalsScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  currencyFormat.format(goalProvider.totalSavedAmount),
+                                  currencyFormat.format(
+                                    goalProvider.totalSavedAmount,
+                                  ),
                                   style: context.theme.typography.xl.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: context.theme.colors.foreground,
@@ -94,7 +102,8 @@ class GoalsScreen extends StatelessWidget {
                   children: [
                     TabBar(
                       labelColor: context.theme.colors.foreground,
-                      unselectedLabelColor: context.theme.colors.mutedForeground,
+                      unselectedLabelColor:
+                          context.theme.colors.mutedForeground,
                       indicatorColor: context.theme.colors.primary,
                       tabs: const [
                         Tab(text: 'Aktif'),
@@ -104,8 +113,16 @@ class GoalsScreen extends StatelessWidget {
                     Expanded(
                       child: TabBarView(
                         children: [
-                          _buildGoalList(context, goalProvider.activeGoals, false),
-                          _buildGoalList(context, goalProvider.completedGoals, true),
+                          _buildGoalList(
+                            context,
+                            goalProvider.activeGoals,
+                            false,
+                          ),
+                          _buildGoalList(
+                            context,
+                            goalProvider.completedGoals,
+                            true,
+                          ),
                         ],
                       ),
                     ),
@@ -117,6 +134,7 @@ class GoalsScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'goals-fab',
         onPressed: () => _showAddGoalDialog(context),
         backgroundColor: context.theme.colors.primary,
         foregroundColor: context.theme.colors.primaryForeground,
@@ -125,8 +143,16 @@ class GoalsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGoalList(BuildContext context, List<Goal> goals, bool isCompleted) {
-    final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+  Widget _buildGoalList(
+    BuildContext context,
+    List<Goal> goals,
+    bool isCompleted,
+  ) {
+    final currencyFormat = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
 
     if (goals.isEmpty) {
       return Center(
@@ -140,7 +166,9 @@ class GoalsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              isCompleted ? 'Belum ada target yang selesai' : 'Belum ada target tabungan',
+              isCompleted
+                  ? 'Belum ada target yang selesai'
+                  : 'Belum ada target tabungan',
               style: context.theme.typography.base.copyWith(
                 color: context.theme.colors.mutedForeground,
               ),
@@ -179,7 +207,10 @@ class GoalsScreen extends StatelessWidget {
                         ),
                         if (goal.isCompleted)
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               color: context.theme.colors.muted,
                               borderRadius: BorderRadius.circular(4),
@@ -241,7 +272,9 @@ class GoalsScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              goal.daysLeft >= 0 ? '${goal.daysLeft} hari lagi' : 'Terlambat',
+                              goal.daysLeft >= 0
+                                  ? '${goal.daysLeft} hari lagi'
+                                  : 'Terlambat',
                               style: context.theme.typography.xs.copyWith(
                                 color: context.theme.colors.mutedForeground,
                               ),
@@ -284,7 +317,7 @@ class GoalsScreen extends StatelessWidget {
     final targetAmountController = TextEditingController();
     final currentAmountController = TextEditingController();
     DateTime selectedDate = DateTime.now().add(const Duration(days: 30));
-    
+
     final theme = context.theme;
 
     showDialog(
@@ -356,7 +389,10 @@ class GoalsScreen extends StatelessWidget {
                       color: theme.colors.foreground,
                     ),
                   ),
-                  trailing: Icon(Icons.calendar_today, color: theme.colors.foreground),
+                  trailing: Icon(
+                    Icons.calendar_today,
+                    color: theme.colors.foreground,
+                  ),
                   onTap: () async {
                     final date = await showDatePicker(
                       context: context,
@@ -382,7 +418,8 @@ class GoalsScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                if (nameController.text.isEmpty || targetAmountController.text.isEmpty) {
+                if (nameController.text.isEmpty ||
+                    targetAmountController.text.isEmpty) {
                   return;
                 }
 
@@ -414,7 +451,11 @@ class GoalsScreen extends StatelessWidget {
 
   void _showGoalDetails(BuildContext context, Goal goal) {
     final amountController = TextEditingController();
-    final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    final currencyFormat = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
     final theme = context.theme;
 
     showDialog(
@@ -432,11 +473,31 @@ class GoalsScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _detailRow('Target', currencyFormat.format(goal.targetAmount), context),
-            _detailRow('Terkumpul', currencyFormat.format(goal.currentAmount), context),
-            _detailRow('Sisa', currencyFormat.format(goal.targetAmount - goal.currentAmount), context),
-            _detailRow('Progress', '${(goal.progress * 100).toStringAsFixed(1)}%', context),
-            _detailRow('Tenggat', DateFormat('dd MMMM yyyy', 'id_ID').format(goal.deadline), context),
+            _detailRow(
+              'Target',
+              currencyFormat.format(goal.targetAmount),
+              context,
+            ),
+            _detailRow(
+              'Terkumpul',
+              currencyFormat.format(goal.currentAmount),
+              context,
+            ),
+            _detailRow(
+              'Sisa',
+              currencyFormat.format(goal.targetAmount - goal.currentAmount),
+              context,
+            ),
+            _detailRow(
+              'Progress',
+              '${(goal.progress * 100).toStringAsFixed(1)}%',
+              context,
+            ),
+            _detailRow(
+              'Tenggat',
+              DateFormat('dd MMMM yyyy', 'id_ID').format(goal.deadline),
+              context,
+            ),
             _detailRow('Hari Tersisa', '${goal.daysLeft} hari', context),
             if (!goal.isCompleted) ...[
               const SizedBox(height: 16),
@@ -477,10 +538,7 @@ class GoalsScreen extends StatelessWidget {
               context.read<GoalProvider>().deleteGoal(goal.id);
               Navigator.pop(context);
             },
-            child: Text(
-              'Hapus',
-              style: TextStyle(color: theme.colors.error),
-            ),
+            child: Text('Hapus', style: TextStyle(color: theme.colors.error)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context),

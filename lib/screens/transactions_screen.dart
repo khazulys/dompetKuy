@@ -13,17 +13,24 @@ class TransactionsScreen extends StatefulWidget {
   State<TransactionsScreen> createState() => _TransactionsScreenState();
 }
 
-class _TransactionsScreenState extends State<TransactionsScreen> {
+class _TransactionsScreenState extends State<TransactionsScreen>
+    with SingleTickerProviderStateMixin {
   TransactionCategory? _selectedCategory;
 
   @override
   Widget build(BuildContext context) {
     final transactionProvider = context.watch<TransactionProvider>();
-    final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    final currencyFormat = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
 
     var transactions = transactionProvider.transactions;
     if (_selectedCategory != null) {
-      transactions = transactions.where((t) => t.category == _selectedCategory).toList();
+      transactions = transactions
+          .where((t) => t.category == _selectedCategory)
+          .toList();
     }
 
     return Scaffold(
@@ -58,7 +65,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           return _FilterChip(
                             label: _getCategoryName(category),
                             isSelected: _selectedCategory == category,
-                            onTap: () => setState(() => _selectedCategory = category),
+                            onTap: () =>
+                                setState(() => _selectedCategory = category),
                           );
                         }),
                       ],
@@ -97,7 +105,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           padding: const EdgeInsets.only(bottom: 12),
                           child: FCard(
                             child: ListTile(
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
                               leading: CircleAvatar(
                                 backgroundColor: context.theme.colors.muted,
                                 child: Icon(
@@ -114,7 +125,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                 ),
                               ),
                               subtitle: Text(
-                                DateFormat('dd MMM yyyy', 'id_ID').format(transaction.date),
+                                DateFormat(
+                                  'dd MMM yyyy',
+                                  'id_ID',
+                                ).format(transaction.date),
                                 style: context.theme.typography.sm.copyWith(
                                   color: context.theme.colors.mutedForeground,
                                 ),
@@ -123,12 +137,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                 '${transaction.type == TransactionType.income ? '+' : '-'} ${currencyFormat.format(transaction.amount)}',
                                 style: context.theme.typography.base.copyWith(
                                   fontWeight: FontWeight.w600,
-                                  color: transaction.type == TransactionType.income
+                                  color:
+                                      transaction.type == TransactionType.income
                                       ? context.theme.colors.foreground
                                       : context.theme.colors.mutedForeground,
                                 ),
                               ),
-                              onTap: () => _showTransactionDetails(context, transaction),
+                              onTap: () =>
+                                  _showTransactionDetails(context, transaction),
                             ),
                           ),
                         );
@@ -139,6 +155,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'transactions-fab',
         onPressed: () => _showAddTransactionDialog(context),
         backgroundColor: context.theme.colors.primary,
         foregroundColor: context.theme.colors.primaryForeground,
@@ -208,10 +225,18 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     TransactionType type = TransactionType.expense;
     TransactionCategory category = TransactionCategory.other;
     DateTime selectedDate = DateTime.now();
-    
-    final theme = context.theme;
 
-    showDialog(
+    final theme = context.theme;
+    final typeController = FSelectController<TransactionType>(
+      vsync: this,
+      value: type,
+    );
+    final categoryController = FSelectController<TransactionCategory>(
+      vsync: this,
+      value: category,
+    );
+
+    final dialog = showDialog(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
@@ -253,48 +278,47 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   style: TextStyle(color: theme.colors.foreground),
                 ),
                 const SizedBox(height: 16),
-                DropdownButtonFormField<TransactionType>(
-                  initialValue: type,
-                  decoration: InputDecoration(
-                    labelText: 'Tipe',
-                    labelStyle: TextStyle(color: theme.colors.mutedForeground),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: theme.colors.border),
-                    ),
-                  ),
-                  style: TextStyle(color: theme.colors.foreground),
-                  dropdownColor: theme.colors.background,
-                  items: [
-                    DropdownMenuItem(
+                FSelect<TransactionType>.rich(
+                  controller: typeController,
+                  label: const Text('Tipe'),
+                  hint: 'Pilih tipe transaksi',
+                  format: (value) => value == TransactionType.income
+                      ? 'Pemasukan'
+                      : 'Pengeluaran',
+                  onChange: (value) {
+                    if (value != null) {
+                      setState(() => type = value);
+                    }
+                  },
+                  children: const [
+                    FSelectItem(
+                      title: Text('Pemasukan'),
                       value: TransactionType.income,
-                      child: Text('Pemasukan'),
                     ),
-                    DropdownMenuItem(
+                    FSelectItem(
+                      title: Text('Pengeluaran'),
                       value: TransactionType.expense,
-                      child: Text('Pengeluaran'),
                     ),
                   ],
-                  onChanged: (value) => setState(() => type = value!),
                 ),
                 const SizedBox(height: 16),
-                DropdownButtonFormField<TransactionCategory>(
-                  initialValue: category,
-                  decoration: InputDecoration(
-                    labelText: 'Kategori',
-                    labelStyle: TextStyle(color: theme.colors.mutedForeground),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: theme.colors.border),
-                    ),
-                  ),
-                  style: TextStyle(color: theme.colors.foreground),
-                  dropdownColor: theme.colors.background,
-                  items: TransactionCategory.values.map((cat) {
-                    return DropdownMenuItem(
-                      value: cat,
-                      child: Text(_getCategoryName(cat)),
-                    );
-                  }).toList(),
-                  onChanged: (value) => setState(() => category = value!),
+                FSelect<TransactionCategory>.rich(
+                  controller: categoryController,
+                  label: const Text('Kategori'),
+                  hint: 'Pilih kategori',
+                  format: (value) => _getCategoryName(value),
+                  onChange: (value) {
+                    if (value != null) {
+                      setState(() => category = value);
+                    }
+                  },
+                  children: [
+                    for (final cat in TransactionCategory.values)
+                      FSelectItem(
+                        title: Text(_getCategoryName(cat)),
+                        value: cat,
+                      ),
+                  ],
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -322,7 +346,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                if (titleController.text.isEmpty || amountController.text.isEmpty) {
+                if (titleController.text.isEmpty ||
+                    amountController.text.isEmpty) {
                   return;
                 }
 
@@ -333,7 +358,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   type: type,
                   category: category,
                   date: selectedDate,
-                  note: noteController.text.isEmpty ? null : noteController.text,
+                  note: noteController.text.isEmpty
+                      ? null
+                      : noteController.text,
                 );
 
                 context.read<TransactionProvider>().addTransaction(transaction);
@@ -349,10 +376,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         ),
       ),
     );
+
+    dialog.whenComplete(() {
+      typeController.dispose();
+      categoryController.dispose();
+    });
   }
 
   void _showTransactionDetails(BuildContext context, Transaction transaction) {
-    final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    final currencyFormat = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
     final theme = context.theme;
 
     showDialog(
@@ -370,23 +406,41 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _detailRow('Jumlah', currencyFormat.format(transaction.amount), context),
-            _detailRow('Tipe', transaction.type == TransactionType.income ? 'Pemasukan' : 'Pengeluaran', context),
-            _detailRow('Kategori', _getCategoryName(transaction.category), context),
-            _detailRow('Tanggal', DateFormat('dd MMMM yyyy', 'id_ID').format(transaction.date), context),
-            if (transaction.note != null) _detailRow('Catatan', transaction.note!, context),
+            _detailRow(
+              'Jumlah',
+              currencyFormat.format(transaction.amount),
+              context,
+            ),
+            _detailRow(
+              'Tipe',
+              transaction.type == TransactionType.income
+                  ? 'Pemasukan'
+                  : 'Pengeluaran',
+              context,
+            ),
+            _detailRow(
+              'Kategori',
+              _getCategoryName(transaction.category),
+              context,
+            ),
+            _detailRow(
+              'Tanggal',
+              DateFormat('dd MMMM yyyy', 'id_ID').format(transaction.date),
+              context,
+            ),
+            if (transaction.note != null)
+              _detailRow('Catatan', transaction.note!, context),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () {
-              context.read<TransactionProvider>().deleteTransaction(transaction.id);
+              context.read<TransactionProvider>().deleteTransaction(
+                transaction.id,
+              );
               Navigator.pop(context);
             },
-            child: Text(
-              'Hapus',
-              style: TextStyle(color: theme.colors.error),
-            ),
+            child: Text('Hapus', style: TextStyle(color: theme.colors.error)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context),
