@@ -69,16 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      floatingActionButton: _currentIndex == 1
-          ? FloatingActionButton(
-              onPressed: () {
-                // TODO: Add transaction
-              },
-              backgroundColor: context.theme.colors.primary,
-              foregroundColor: context.theme.colors.primaryForeground,
-              child: const Icon(Icons.add),
-            )
-          : null,
     );
   }
 }
